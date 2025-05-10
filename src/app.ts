@@ -2,6 +2,8 @@ import express from "express";
 const morgan = require("morgan");
 const path = require("path");
 const app = express();
+import { errorHandler } from "./middlewares/errorHandling";
+
 //ROUTES IMORTS
 const productRouter = require("./routes/productRoute");
 const categoryRouter = require("./routes/categoryRoute");
@@ -19,5 +21,7 @@ app.use(
   express.static(path.join(__dirname, "uploads")),
   imageUploadRouter
 );
+
+app.use(errorHandler);
 
 export default app;

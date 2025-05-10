@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../middlewares/errorHandling";
 const Category = require("../models/categoryModel");
 const {
   categoryValidationSchema,
@@ -12,7 +13,8 @@ exports.createCategory = async (
 ) => {
   const { error } = categoryValidationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    throw new AppError(error.details[0].message, 400);
+    // return res.status(400).json({ error: error.details[0].message });
   }
   const category = await Category.create(req.body);
   res.status(201).json({ category });
@@ -34,7 +36,8 @@ exports.getCategory = async (
 ) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
-    return res.status(404).json({ error: "Category not found" });
+    throw new AppError("Category not found", 404);
+    // return res.status(404).json({ error: "Category not found" });
   }
   res.status(200).json({ category });
 };
@@ -45,14 +48,16 @@ exports.updateCategory = async (
 ) => {
   const { error } = updateCategoryValidationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    throw new AppError(error.details[0].message, 400);
+    // return res.status(400).json({ error: error.details[0].message });
   }
   const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
   if (!category) {
-    return res.status(404).json({ error: "Category not found" });
+    throw new AppError("Category not found", 404);
+    // return res.status(404).json({ error: "Category not found" });
   }
   res.status(200).json({ category });
 };
@@ -64,7 +69,8 @@ exports.deleteCategory = async (
 ) => {
   const category = await Category.findByIdAndDelete(req.params.id);
   if (!category) {
-    return res.status(404).json({ error: "Category not found" });
+    throw new AppError("Category not found", 404);
+    // return res.status(404).json({ error: "Category not found" });
   }
-  res.status(200).json({ message: "Category deleted successfully" });
+  res.status(200).json({ message: "Category deleted successfully", category });
 };

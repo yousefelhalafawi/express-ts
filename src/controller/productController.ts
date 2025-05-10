@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import { GetAllFeature } from "../utils/getAllfeature";
+import { AppError } from "../middlewares/errorHandling";
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const {
@@ -28,8 +30,18 @@ exports.getAllProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-  const products = await Product.find().populate("category");
-  res.status(200).json({ products });
+  const features = new GetAllFeature(
+    Product.find().populate("category"),
+    req.query
+  )
+    .filter()
+    .sort()
+    .paginate();
+  const products = await features.getQuery();
+  // const products = await Product.find().populate("category");
+  res
+    .status(200)
+    .json({ status: "success", results: products.length, products });
 };
 
 exports.getProduct = async (
@@ -39,7 +51,8 @@ exports.getProduct = async (
 ) => {
   const product = await Product.findById(req.params.id).populate("category");
   if (!product) {
-    return res.status(404).json({ error: "Product not found" });
+    throw new AppError("Product not found", 404);
+    // return res.status(404).json({ error: "Product not found" });
   }
   res.status(200).json({ product });
 };
@@ -50,13 +63,15 @@ exports.updateProduct = async (
 ) => {
   const { error } = updateProductValidationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    throw new AppError(error.details[0].message, 400);
+    // return res.status(400).json({ error: error.details[0].message });
   }
   const categoryId = req.body.category;
   if (categoryId) {
     const categoryExists = await Category.findById(categoryId);
     if (!categoryExists) {
-      return res.status(400).json({ message: "Invalid category ID" });
+      throw new AppError("Invalid category ID", 400);
+      // return res.status(400).json({ message: "Invalid category ID" });
     }
   }
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -64,7 +79,8 @@ exports.updateProduct = async (
     runValidators: true,
   });
   if (!product) {
-    return res.status(404).json({ error: "Product not found" });
+    throw new AppError("Product not found", 404);
+    // return res.status(404).json({ error: "Product not found" });
   }
 
   res.status(200).json({ product });
@@ -77,7 +93,8 @@ exports.deleteProduct = async (
 ) => {
   const product = await Product.findByIdAndDelete(req.params.id);
   if (!product) {
-    return res.status(404).json({ error: "Product not found" });
+    throw new AppError("Product not found", 404);
+    // return res.status(404).json({ error: "Product not found" });
   }
-  res.status(200).json({ message: "Product deleted successfully" });
+  res.status(200).json({ message: "Product deleted successfully", product });
 };
