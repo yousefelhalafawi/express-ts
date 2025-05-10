@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 const router = express.Router();
 const upload = require("../config/multer"); // Your multer config
 const {
