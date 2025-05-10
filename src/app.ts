@@ -2,7 +2,7 @@ import express from "express";
 const morgan = require("morgan");
 const path = require("path");
 const app = express();
-import { errorHandler } from "./middlewares/errorHandling";
+import { AppError, errorHandler } from "./middlewares/errorHandling";
 
 //ROUTES IMORTS
 const productRouter = require("./routes/productRoute");
@@ -21,7 +21,9 @@ app.use(
   express.static(path.join(__dirname, "uploads")),
   imageUploadRouter
 );
-
+app.use((req, res, next) => {
+  next(new AppError(`Route ${req.originalUrl} not found`, 404));
+});
 app.use(errorHandler);
 
 export default app;
