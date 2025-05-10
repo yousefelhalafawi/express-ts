@@ -1,12 +1,12 @@
 import express from "express";
-const morgan = require("morgan");
-const path = require("path");
-const app = express();
+import morgan from "morgan";
+import path from "path";
 import { AppError, errorHandler } from "./middlewares/errorHandling";
+const app = express();
 
 //ROUTES IMORTS
-const productRouter = require("./routes/productRoute");
-const categoryRouter = require("./routes/categoryRoute");
+import productRouter from "./routes/productRoute";
+import categoryRouter from "./routes/categoryRoute";
 const imageUploadRouter = require("./routes/imageUploadRoute");
 
 //MIDDLEWARES

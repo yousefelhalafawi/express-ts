@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../middlewares/errorHandling";
-const Category = require("../models/categoryModel");
-const {
+import Category from "../models/categoryModel";
+import {
   categoryValidationSchema,
   updateCategoryValidationSchema,
-} = require("../validations/categoryValidaion");
+} from "../validations/categoryValidaion";
 
-exports.createCategory = async (
+export const createCategory = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -20,7 +20,7 @@ exports.createCategory = async (
   res.status(201).json({ category });
 };
 
-exports.getAllCategories = async (
+export const getAllCategories = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -29,7 +29,7 @@ exports.getAllCategories = async (
   res.status(200).json({ categories });
 };
 
-exports.getCategory = async (
+export const getCategory = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -41,7 +41,7 @@ exports.getCategory = async (
   }
   res.status(200).json({ category });
 };
-exports.updateCategory = async (
+export const updateCategory = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -62,7 +62,7 @@ exports.updateCategory = async (
   res.status(200).json({ category });
 };
 
-exports.deleteCategory = async (
+export const deleteCategory = async (
   req: Request,
   res: Response,
   next: NextFunction

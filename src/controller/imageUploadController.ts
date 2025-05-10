@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../middlewares/errorHandling";
 
-exports.uploadImage = async (
+export const uploadImage = async (
   req: Request & { file?: any },
   res: Response,
   next: NextFunction
@@ -15,7 +15,11 @@ exports.uploadImage = async (
     fileID: filePath,
   });
 };
-exports.getImage = async (req: Request, res: Response, next: NextFunction) => {
+export const getImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const fs = require("fs");
   const path = require("path");
   const filename = req.params.fileName;

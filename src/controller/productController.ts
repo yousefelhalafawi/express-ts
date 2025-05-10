@@ -1,31 +1,33 @@
 import { Request, Response, NextFunction } from "express";
 import { GetAllFeature } from "../utils/getAllfeature";
 import { AppError } from "../middlewares/errorHandling";
-const Product = require("../models/productModel");
-const Category = require("../models/categoryModel");
-const {
+import Product from "../models/productModel";
+import Category from "../models/categoryModel";
+import {
   productValidationSchema,
   updateProductValidationSchema,
-} = require("../validations/productValidation");
+} from "../validations/productValidation";
 
-exports.createProduct = async (
+export const createProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { error } = productValidationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    throw new AppError(error.details[0].message, 400);
+    // return res.status(400).json({ error: error.details[0].message });
   }
   const categoryExists = await Category.findById(req.body.category);
   if (!categoryExists) {
-    return res.status(400).json({ error: "Category not found!" });
+    throw new AppError("Category not found!", 400);
+    // return res.status(400).json({ error: "Category not found!" });
   }
   const product = await Product.create(req.body);
   res.status(201).json({ product });
 };
 
-exports.getAllProducts = async (
+export const getAllProducts = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -44,7 +46,7 @@ exports.getAllProducts = async (
     .json({ status: "success", results: products.length, products });
 };
 
-exports.getProduct = async (
+export const getProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -56,7 +58,7 @@ exports.getProduct = async (
   }
   res.status(200).json({ product });
 };
-exports.updateProduct = async (
+export const updateProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -86,7 +88,7 @@ exports.updateProduct = async (
   res.status(200).json({ product });
 };
 
-exports.deleteProduct = async (
+export const deleteProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
