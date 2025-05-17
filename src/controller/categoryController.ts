@@ -1,23 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { AppError } from "../middlewares/errorHandling";
 import Category from "../models/categoryModel";
-import {
-  categoryValidationSchema,
-  updateCategoryValidationSchema,
-} from "../validations/categoryValidaion";
+import * as categoryService from "../services/categoryService";
+import { AppError } from "../middlewares/errorHandling";
 
 export const createCategory = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = categoryValidationSchema.validate(req.body);
-  if (error) {
-    throw new AppError(error.details[0].message, 400);
-    // return res.status(400).json({ error: error.details[0].message });
+  try {
+    const category = await categoryService.createCategory(req.body);
+    res
+      .status(201)
+      .json({ message: "Category created successfully", category });
+  } catch (err) {
+    next(err);
   }
-  const category = await Category.create(req.body);
-  res.status(201).json({ category });
 };
 
 export const getAllCategories = async (
@@ -25,8 +23,14 @@ export const getAllCategories = async (
   res: Response,
   next: NextFunction
 ) => {
-  const categories = await Category.find();
-  res.status(200).json({ categories });
+  try {
+    const categories = await categoryService.getAllCategories();
+    res
+      .status(200)
+      .json({ message: "Categories fetched successfully", categories });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getCategory = async (
@@ -34,32 +38,32 @@ export const getCategory = async (
   res: Response,
   next: NextFunction
 ) => {
-  const category = await Category.findById(req.params.id);
-  if (!category) {
-    throw new AppError("Category not found", 404);
-    // return res.status(404).json({ error: "Category not found" });
+  try {
+    const category = await categoryService.getCategory(req.params.id);
+    res
+      .status(200)
+      .json({ message: "Category fetched successfully", category });
+  } catch (err) {
+    next(err);
   }
-  res.status(200).json({ category });
 };
+
 export const updateCategory = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  const { error } = updateCategoryValidationSchema.validate(req.body);
-  if (error) {
-    throw new AppError(error.details[0].message, 400);
-    // return res.status(400).json({ error: error.details[0].message });
+): Promise<void> => {
+  try {
+    const category = await categoryService.updateCategory(
+      req.params.id,
+      req.body
+    );
+    res
+      .status(200)
+      .json({ message: "Category updated successfully", category });
+  } catch (err) {
+    next(err);
   }
-  const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!category) {
-    throw new AppError("Category not found", 404);
-    // return res.status(404).json({ error: "Category not found" });
-  }
-  res.status(200).json({ category });
 };
 
 export const deleteCategory = async (
@@ -67,10 +71,18 @@ export const deleteCategory = async (
   res: Response,
   next: NextFunction
 ) => {
-  const category = await Category.findByIdAndDelete(req.params.id);
-  if (!category) {
-    throw new AppError("Category not found", 404);
-    // return res.status(404).json({ error: "Category not found" });
+  try {
+    const category = await categoryService.deleteCategory(req.params.id);
+    res
+      .status(200)
+      .json({ message: "Category deleted successfully", category });
+  } catch (err) {
+    next(err);
   }
-  res.status(200).json({ message: "Category deleted successfully", category });
 };
+
+export const getCategoryById = (id: string) => Category.findById(id);
+export const updateCategoryById = (id: string, data: any) =>
+  Category.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+export const deleteCategoryById = (id: string) =>
+  Category.findByIdAndDelete(id);
