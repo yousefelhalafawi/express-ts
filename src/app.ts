@@ -5,9 +5,9 @@ import { AppError, errorHandler } from "./middlewares/errorHandling";
 const app = express();
 
 //ROUTES IMORTS
-import productRouter from "./routes/productRoute";
-import categoryRouter from "./routes/categoryRoute";
-const imageUploadRouter = require("./routes/imageUploadRoute");
+import productRouter from "./routes/product.route";
+import categoryRouter from "./routes/category.route";
+const imageUploadRouter = require("./routes/image.route");
 
 //MIDDLEWARES
 app.use(express.json());

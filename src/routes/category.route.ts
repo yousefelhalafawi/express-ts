@@ -6,11 +6,11 @@ import {
   getAllCategories,
   getCategory,
   updateCategory,
-} from "../controller/categoryController";
+} from "../controller/category.controller";
 import {
   categoryValidationSchema,
   updateCategoryValidationSchema,
-} from "../validations/categoryValidaion";
+} from "../validations/category.validation";
 import { validateBody } from "../middlewares/validate";
 
 router

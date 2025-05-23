@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Category from "../models/categoryModel";
-import * as categoryService from "../services/categoryService";
-import { AppError } from "../middlewares/errorHandling";
+import Category from "../models/category.model";
+import * as categoryService from "../services/category.service";
 
 export const createCategory = async (
   req: Request,

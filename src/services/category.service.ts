@@ -1,4 +1,4 @@
-import * as categoryRepo from "../repositories/categoryRepository";
+import * as categoryRepo from "../repositories/category.repository";
 
 import { AppError } from "../middlewares/errorHandling";
 

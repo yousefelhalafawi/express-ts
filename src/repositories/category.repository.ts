@@ -1,4 +1,4 @@
-import Category from "../models/categoryModel";
+import Category from "../models/category.model";
 
 export const createCategory = (data: any) => Category.create(data);
 export const getAllCategories = () => Category.find();
