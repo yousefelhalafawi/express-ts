@@ -22,8 +22,14 @@ export const protect = async (
     const token = authHeader.split(" ")[1];
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+    const user: any = await User.findById(decoded.id);
 
-    const user = await User.findById(decoded.id);
+    if (user.changedPasswordAfter(decoded.iat)) {
+      throw new AppError(
+        "User password changed recently. Please log in again.",
+        401
+      );
+    }
     if (!user) throw new AppError("User not found", 404);
 
     req.user = user;
