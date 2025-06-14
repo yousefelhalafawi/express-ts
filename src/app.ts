@@ -7,6 +7,7 @@ const app = express();
 //ROUTES IMORTS
 import productRouter from "./routes/product.route";
 import categoryRouter from "./routes/category.route";
+import userRouter from "./routes/user.route";
 const imageUploadRouter = require("./routes/image.route");
 
 //MIDDLEWARES
@@ -16,6 +17,7 @@ app.use(morgan("dev"));
 //ROUTES
 app.use("/api/products", productRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/users", userRouter);
 app.use(
   "/api/images",
   express.static(path.join(__dirname, "uploads")),

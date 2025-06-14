@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import Category from "../models/category.model";
 import * as categoryService from "../services/category.service";
 
 export const createCategory = async (
@@ -79,9 +78,3 @@ export const deleteCategory = async (
     next(err);
   }
 };
-
-export const getCategoryById = (id: string) => Category.findById(id);
-export const updateCategoryById = (id: string, data: any) =>
-  Category.findByIdAndUpdate(id, data, { new: true, runValidators: true });
-export const deleteCategoryById = (id: string) =>
-  Category.findByIdAndDelete(id);
